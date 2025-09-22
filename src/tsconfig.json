@@ -1,0 +1,8 @@
+{
+	"extends": "..",
+	"include": [ "*" ],
+	"compilerOptions": {
+		"outDir": "../dist",
+		"rootDir": "."
+	}
+}

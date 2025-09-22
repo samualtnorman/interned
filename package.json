@@ -1,0 +1,33 @@
+{
+	"name": "interned",
+	"version": "0.0.0",
+	"description": "Object interning.",
+	"keywords": [
+		"intern",
+		"interned",
+		"interning"
+	],
+	"homepage": "https://github.com/samualtnorman/interned#readme",
+	"bugs": {
+		"url": "https://github.com/samualtnorman/interned/issues",
+		"email": "me@samual.uk"
+	},
+	"author": "Samual Norman <me@samual.uk> (https://samual.uk/)",
+	"license": "MIT",
+	"type": "module",
+	"private": true,
+	"engines": {
+		"node": "^20.10 || ^22 || >=24",
+		"pnpm": "^10"
+	},
+	"exports": {
+		".": "./default.js"
+	},
+	"devDependencies": {
+		"@samual/rolldown-config": "0.0.1-4c44901",
+		"@total-typescript/ts-reset": "^0.6.1",
+		"@types/node": "^24.5.2",
+		"rolldown": "1.0.0-beta.39",
+		"typescript": "^5.9.2"
+	}
+}
