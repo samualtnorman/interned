@@ -1,16 +1,30 @@
-const internedObjectRefs = new Set<WeakRef<{ [k: string]: unknown }>>()
+const internedObjectRefs = new Set<WeakRef<{ readonly [k: string]: unknown }>>()
 
-export const Interned = <T extends object>(object: T): { readonly [K in keyof T as K extends string ? K : never]: T[K] } => {
+export type Interned<T extends object> = { readonly [K in keyof T as K extends string ? K : never]: T[K] }
+
+export type DeeplyInterned<T extends object> =
+	{ readonly [K in keyof T as K extends string ? K : never]: T[K] extends object ? DeeplyInterned<T[K]> : T[K] }
+
+const filterMap =
+	<T, U>(itera: Iterator<T> | Iterable<T>, callback: (item: T) => U | false | 0 | 0n | undefined | null | "") =>
+	Iterator.from(itera).map(callback).filter(Boolean) as IteratorObject<U, undefined, unknown>
+
+const getInternedObjects = () => filterMap(internedObjectRefs, ref => {
+	const interned = ref.deref()
+
+	if (!interned)
+		internedObjectRefs.delete(ref)
+
+	return interned
+})
+
+export const Interned = <T extends object>(object: T): Interned<T> => {
 	const keys = Object.getOwnPropertyNames(object)
 		.filter(key => "value" in Reflect.getOwnPropertyDescriptor(object, key)!)
 
-	for (const internedObjectRef of internedObjectRefs) {
-		const internedObject = internedObjectRef.deref()
-
-		if (!internedObject) {
-			internedObjectRefs.delete(internedObjectRef)
-			continue
-		}
+	for (const internedObject of getInternedObjects()) {
+		if (object == internedObject)
+			return object
 
 		const internedObjectKeys = Object.getOwnPropertyNames(internedObject)
 
@@ -24,21 +38,21 @@ export const Interned = <T extends object>(object: T): { readonly [K in keyof T 
 			return internedObject as T
 	}
 
-	const result =
-		Object.freeze(Object.setPrototypeOf(Object.fromEntries(keys.sort().map(key => [ key, (object as any)[key] ])), null))
+	const result = Object
+		.freeze(Object.setPrototypeOf(Object.fromEntries(keys.sort().map(key => [ key, (object as any)[key] ])), null))
 
 	internedObjectRefs.add(new WeakRef(result))
 
 	return result
 }
 
-export const isInterned = (value: unknown): boolean => internedObjectRefs.values().some(internedObjectRef => {
-	const internedObject = internedObjectRef.deref()
+export const isInterned = (value: unknown): boolean =>
+	getInternedObjects().some(internedObject => internedObject == value)
 
-	if (!internedObject) {
-		internedObjectRefs.delete(internedObjectRef)
-		return false
-	}
+const isObject = (value: unknown): value is object => !!value && typeof value == "object" || typeof value == "function"
 
-	return internedObject == value
-})
+export const internDeeply = <T extends object>(object: T): DeeplyInterned<T> =>
+	Interned(Object.fromEntries(Object.getOwnPropertyNames(object)
+		.filter(key => "value" in Reflect.getOwnPropertyDescriptor(object, key)!)
+		.map(key => [ key, isObject((object as any)[key]) ? internDeeply((object as any)[key]) : (object as any)[key] ])
+	)) as DeeplyInterned<T>
