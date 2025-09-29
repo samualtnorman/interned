@@ -5,17 +5,15 @@ export type Interned<T extends object> = { readonly [K in keyof T as K extends s
 export type DeeplyInterned<T extends object> =
 	{ readonly [K in keyof T as K extends string ? K : never]: T[K] extends object ? DeeplyInterned<T[K]> : T[K] }
 
-const filterMap =
-	<T, U>(itera: Iterator<T> | Iterable<T>, callback: (item: T) => U | false | 0 | 0n | undefined | null | "") =>
-	Iterator.from(itera).map(callback).filter(Boolean) as IteratorObject<U, undefined, unknown>
-
-const getInternedObjects = () => filterMap(internedObjectRefs, ref => {
+const getInternedObjects = () => internedObjectRefs.values().flatMap(ref => {
 	const interned = ref.deref()
 
-	if (!interned)
-		internedObjectRefs.delete(ref)
+	if (interned)
+		return [ interned ]
 
-	return interned
+	internedObjectRefs.delete(ref)
+
+	return []
 })
 
 export const Interned = <T extends object>(object: T): Interned<T> => {
