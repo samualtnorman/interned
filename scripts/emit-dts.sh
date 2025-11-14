@@ -1,2 +1,2 @@
 #!/bin/sh
-tsc --project src --noEmit false --noCheck
+node_modules/.bin/tsc --project src --noEmit false --noCheck
