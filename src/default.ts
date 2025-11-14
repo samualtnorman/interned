@@ -5,16 +5,14 @@ export type Interned<T extends object> = { readonly [K in keyof T as K extends s
 export type DeeplyInterned<T extends object> =
 	{ readonly [K in keyof T as K extends string ? K : never]: T[K] extends object ? DeeplyInterned<T[K]> : T[K] }
 
-const getInternedObjects = () => internedObjectRefs.values().flatMap(ref => {
+const getInternedObjects = () => internedObjectRefs.values().map(ref => {
 	const interned = ref.deref()
 
 	if (interned)
-		return [ interned ]
+		return interned
 
 	internedObjectRefs.delete(ref)
-
-	return []
-})
+}).filter(Boolean)
 
 export const Interned = <T extends object>(object: T): Interned<T> => {
 	const keys = Object.getOwnPropertyNames(object)
