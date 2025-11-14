@@ -18,7 +18,6 @@
 
 		// Other Outputs
 		// "sourceMap": true,
-		"declaration": true,
 		// "declarationMap": true,
 
 		// Stricter Typechecking Options
@@ -34,14 +33,12 @@
 		// Recommended Options
 		"strict": true,
 		"verbatimModuleSyntax": true,
-		"isolatedModules": true,
 		"noUncheckedSideEffectImports": true,
 		"moduleDetection": "force",
 		"skipLibCheck": true,
 
 		"noEmit": true,
 		"checkJs": true,
-		"emitDeclarationOnly": true,
 		"resolveJsonModule": true
 	}
 }

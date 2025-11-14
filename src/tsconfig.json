@@ -1,8 +1,12 @@
 {
 	"extends": "..",
-	"include": [ "*" ],
+	"include": [ "**/*" ],
 	"compilerOptions": {
 		"outDir": "../dist",
-		"rootDir": "."
+		"rootDir": ".",
+		"types": [ "@total-typescript/ts-reset" ],
+		"emitDeclarationOnly": false,
+		"isolatedModules": true,
+		"declaration": true
 	}
 }
