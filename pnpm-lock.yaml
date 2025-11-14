@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  typescript:
+    hash: 0ae029400a6ee5c197ff6cfdf5c68cd36a5603f13569c5ab53fadb6b9fb1b3ad
+    path: patches/typescript.patch
+
 importers:
 
   .:
@@ -22,7 +27,7 @@ importers:
         version: 1.0.0-beta.50
       typescript:
         specifier: ^5.9.2
-        version: 5.9.2
+        version: 5.9.2(patch_hash=0ae029400a6ee5c197ff6cfdf5c68cd36a5603f13569c5ab53fadb6b9fb1b3ad)
 
 packages:
 
@@ -2245,7 +2250,7 @@ snapshots:
   tslib@2.8.1:
     optional: true
 
-  typescript@5.9.2: {}
+  typescript@5.9.2(patch_hash=0ae029400a6ee5c197ff6cfdf5c68cd36a5603f13569c5ab53fadb6b9fb1b3ad): {}
 
   undici-types@7.12.0: {}
 

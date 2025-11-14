@@ -1,0 +1,13 @@
+diff --git a/lib/lib.esnext.iterator.d.ts b/lib/lib.esnext.iterator.d.ts
+index 76346324ad2a78854e1f566ceb0c41605cf3ff95..c3388f88646b09beb1d6f66edb21ca367a351fde 100644
+--- a/lib/lib.esnext.iterator.d.ts
++++ b/lib/lib.esnext.iterator.d.ts
+@@ -49,6 +49,8 @@ declare global {
+          */
+         map<U>(callbackfn: (value: T, index: number) => U): IteratorObject<U, undefined, unknown>;
+ 
++        filter(predicate: BooleanConstructor): IteratorObject<T extends undefined | null | false | 0 | 0n | "" ? never : T, undefined, unknown>;
++
+         /**
+          * Creates an iterator whose values are those from this iterator for which the provided predicate returns true.
+          * @param predicate A function that accepts up to two arguments to be used to test values from the underlying iterator.
